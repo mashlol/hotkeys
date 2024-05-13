@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using CoreAudio;
 
 public class TrayOnlyApplicationContext : ApplicationContext {
     private readonly NotifyIcon trayIcon;
@@ -27,9 +28,16 @@ public class TrayOnlyApplicationContext : ApplicationContext {
 public class Hotkeys {
 
     public static int Main(string[] args) {
+
         Hook.GlobalEvents().OnCombination(new Dictionary<Combination, Action>() {
             {Combination.FromString("Alt+Shift+Q"), () => {
                 Application.SetSuspendState(PowerState.Suspend, false, false);
+            }},
+            {Combination.FromString("Alt+Shift+W"), () => {
+                SetAudioDevice("Speakers (Realtek(R) Audio)");
+            }},
+            {Combination.FromString("Alt+Shift+E"), () => {
+                SetAudioDevice("Speakers (Yeti X)");
             }},
         });
 
@@ -40,4 +48,15 @@ public class Hotkeys {
         return 0;
     }
 
+    private static void SetAudioDevice(string deviceName) {
+        var deviceEnumerator = new MMDeviceEnumerator(Guid.NewGuid());
+        var devices = deviceEnumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active);
+
+        foreach (var device in devices) {
+            if (device.DeviceFriendlyName == deviceName) {
+                deviceEnumerator.SetDefaultAudioEndpoint(device);
+                return;
+            }
+        }
+    }
 }

@@ -12,6 +12,9 @@
     <Reference Include="Gma.System.MouseKeyHook">
       <HintPath>Gma.System.MouseKeyHook.dll</HintPath>
     </Reference>
+    <Reference Include="CoreAudio">
+      <HintPath>CoreAudio.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
