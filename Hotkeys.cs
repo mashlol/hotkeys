@@ -27,11 +27,9 @@ public class TrayOnlyApplicationContext : ApplicationContext {
 public class Hotkeys {
 
     public static int Main(string[] args) {
-        Console.WriteLine("Hello world!");
-
         Hook.GlobalEvents().OnCombination(new Dictionary<Combination, Action>() {
-            {Combination.FromString("Control+Z"), () => {
-                Console.WriteLine("Sleep pressed!");
+            {Combination.FromString("Alt+Shift+Q"), () => {
+                Application.SetSuspendState(PowerState.Suspend, false, false);
             }},
         });
 
