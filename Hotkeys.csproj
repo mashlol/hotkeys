@@ -1,10 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <TargetFramework>net4.7.2</TargetFramework>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>9.0</LangVersion>
+    <UseWindowsForms>true</UseWindowsForms>
+    <StartupObject></StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
