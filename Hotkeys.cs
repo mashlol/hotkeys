@@ -12,40 +12,26 @@ public class TrayOnlyApplicationContext : ApplicationContext {
         trayIcon = new NotifyIcon() {
             Icon = new Icon(SystemIcons.Exclamation, 40, 40),
             ContextMenu = new ContextMenu(new MenuItem[] {
-                new("Exit", Exit)
+                new("Set to speakers", (sender, e) => SetToSpeakers()),
+                new("Set to headphones", (sender, e) => SetToHeadphones()),
+                new("Exit", Exit),
             }),
             Visible = true
         };
     }
 
-    void Exit(object sender, EventArgs e) {
+    private void Exit(object sender, EventArgs e) {
         trayIcon.Visible = false;
 
         Application.Exit();
     }
-}
 
-public class Hotkeys {
+    public static void SetToSpeakers() {
+        SetAudioDevice("Speakers (Realtek(R) Audio)");
+    }
 
-    public static int Main(string[] args) {
-
-        Hook.GlobalEvents().OnCombination(new Dictionary<Combination, Action>() {
-            {Combination.FromString("Alt+Shift+Q"), () => {
-                Application.SetSuspendState(PowerState.Suspend, false, false);
-            }},
-            {Combination.FromString("Alt+Shift+W"), () => {
-                SetAudioDevice("Speakers (Realtek(R) Audio)");
-            }},
-            {Combination.FromString("Alt+Shift+E"), () => {
-                SetAudioDevice("Speakers (Yeti X)");
-            }},
-        });
-
-        Application.EnableVisualStyles();
-        Application.SetCompatibleTextRenderingDefault(false);
-        Application.Run(new TrayOnlyApplicationContext());
-
-        return 0;
+    public static void SetToHeadphones() {
+        SetAudioDevice("Speakers (Yeti X)");
     }
 
     private static void SetAudioDevice(string deviceName) {
@@ -59,4 +45,30 @@ public class Hotkeys {
             }
         }
     }
+}
+
+public class Hotkeys {
+
+    public static int Main(string[] args) {
+
+        Hook.GlobalEvents().OnCombination(new Dictionary<Combination, Action>() {
+            {Combination.FromString("Alt+Shift+Q"), () => {
+                Application.SetSuspendState(PowerState.Suspend, false, false);
+            }},
+            {Combination.FromString("Alt+Shift+W"), () => {
+                TrayOnlyApplicationContext.SetToSpeakers();
+            }},
+            {Combination.FromString("Alt+Shift+E"), () => {
+                TrayOnlyApplicationContext.SetToHeadphones();
+            }},
+        });
+
+        Application.EnableVisualStyles();
+        Application.SetCompatibleTextRenderingDefault(false);
+        Application.Run(new TrayOnlyApplicationContext());
+
+        return 0;
+    }
+
+
 }
